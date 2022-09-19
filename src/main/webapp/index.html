@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>User nic validation</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link> 
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+        <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script>
+
+            (function () {
+                'use strict';
+
+                window.addEventListener('load', function () {
+                    var forms = document.getElementsByClassName('needs-validation');
+                    var validation = Array.prototype.filter.call(forms, function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (form.checkValidity() === false) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                            form.classList.add('was-validated');
+                        }, false);
+                    });
+         
+                }, false);
+                
+            })();
+
+
+
+        </script>
+
+    </head>
+
+
+    <body >
+        <div class="container"  align="center">
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h2  align="left">User NIC Validation</h2>
+                    <div  align="right">
+                        <a href="View.html"><button class="btn btn-primary">List All Users</button></a>
+                    </div>
+                </div>
+                <div class="card-body"   align="center">
+
+                    <form action="" name="form" method="post" class="needs-validation" novalidate id="form">
+
+                        <div class="form-group row">
+                            <label for="fullName" class="col-sm-2 col-form-label">First Name</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="fullName" id="fullName" autocomplete="off" required="" placeholder="Enter Full name">
+                                <div class="invalid-feedback" id="errorFullName">Please Enter the Full Name</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="address" placeholder="Enter Address" id="address" autocomplete="off" required="">
+                                <div class="invalid-feedback">Please Enter the Address</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label for="nic" class="col-sm-2 col-form-label">NIC</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="nic" placeholder="Enter NIC" id="nic" autocomplete="off" required="">
+                                <div id="nicvalidate" class="invalid-feedback">Please Enter the NIC Number</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="nationality" class="col-sm-2 col-form-label">Nationality</label>
+                            <div class="col-sm-7">
+                                <select name="nationality" class="form-control" class="col-sm-7" id="nationality" autocomplete="off" required="">
+                                    <option disabled selected>selct one</option>
+                                    <option >Sinhala</option>
+                                    <option>Tamil</option>
+                                    <option>Muslim</option>
+                                </select>
+                                <div class="invalid-feedback">Please Select Nationality</div>
+                            </div>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary btn-lg" >Submit</button>
+
+                    </form >
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            form.addEventListener('submit', function (e) {
+                console.log("EventListener Working");
+                e.preventDefault();
+
+                var fullName = document.getElementById("fullName").value;
+                var address = document.getElementById("address").value;
+                var nationality = document.getElementById("nationality").value;
+                var nic = document.getElementById("nic").value;
+
+
+
+                fetch("http://localhost:8080/NicRestValidation1/resources/user",
+                        {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                "id": 1,
+                                "fullName": fullName,
+                                "address": address,
+                                "nationality": nationality,
+                                "nic": nic
+                            }),
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        })
+
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log('Success:', data);
+
+                            swal({
+                                title: "Success!",
+                                text: "Successfully  innserted ann user!",
+                                icon: "success"
+                            })
+                                    .then((added) => {
+                                        if (added) {
+                                            document.location.replace("./View.html");
+                                        }
+                                    });
+                            
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+
+            })
+
+
+
+        </script>
+
+
+    </body>
+
+
+</html>

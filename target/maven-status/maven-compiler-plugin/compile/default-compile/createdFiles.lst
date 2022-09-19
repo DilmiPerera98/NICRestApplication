@@ -1,0 +1,7 @@
+com\mycompany\nicrestvalidation1\Model\User.class
+com\mycompany\nicrestvalidation1\Controller\JAXRSConfiguration.class
+com\mycompany\nicrestvalidation1\Model\UserTemp.class
+com\mycompany\nicrestvalidation1\Controller\UserDao.class
+com\mycompany\nicrestvalidation1\Controller\Controller.class
+com\mycompany\nicrestvalidation1\Controller\CrosFilter.class
+com\mycompany\nicrestvalidation1\resources\JavaEE8Resource.class

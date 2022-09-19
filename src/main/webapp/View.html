@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View Users</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    </head>
+
+
+    <body>
+        <div class="container"  align="center">
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h4  align="left">User NIC Validation/List of Users</h4>
+                    <div  align="right">
+                        <a href="index.html"><button class="btn btn-primary">Add New User</button></a>
+                    </div>
+
+                </div>
+                <div class="card-body"   align="center">
+
+                    <div align="center">
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">FULL Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Nationality</th>
+                                    <th scope="col">Nic</th>
+                                    <th scope="col">Gender</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Birth Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="viewCotent">
+
+                            </tbody>
+                        </table>
+                    </div>	
+
+                </div>
+            </div>
+        </div>  
+
+        <script>
+
+            var tableContent = "";
+            async function viewAllUsers() {
+                console.log("View all users called");
+                const response = await fetch("http://localhost:8080/NicRestValidation1/resources/user/view-user");
+                const data = await response.json();
+                var count = data.length;
+                dataset = data;
+                console.log("Data from view html" + data);
+                for (var i = 0; i < count; i++) {
+                    tableContent = tableContent +
+                            "<tr >" +
+                            "<td scope='col' >" + data[i].id + "</td>" +
+                            "<td scope='col'>" + data[i].fullName + "</td>" +
+                            "<td scope='col'>" + data[i].address + "</td>" +
+                            "<td scope='col'>" + data[i].nationality + "</td>" +
+                            "<td scope='col'>" + data[i].nic + "</td>" +
+                            "<td scope='col'>" + data[i].gender + "</td>" +
+                            "<td scope='col'>" + data[i].age + "</td>" +
+                            "<td scope='col'>" + data[i].dob + "</td>" +
+                            "<td scope='col'><div ><a class='" + "btn btn-info" + "' onClick='passEditId(" + data[i].id + ")'>Edit</a>&nbsp;&nbsp; <a class='" + "btn btn-danger" + "' onClick='passDeleteId(" + data[i].id + ")'>Delete</a></td>" +
+                            "</tr>";
+                }
+
+                document.getElementById("viewCotent").innerHTML = tableContent;
+            }
+
+            viewAllUsers();
+
+
+            function passEditId(id) {
+                swal({
+                    title: "Do you want to update?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                })
+                        .then((willupdate) => {
+                            if (willupdate) {
+                                localStorage.setItem("edit_id", id);
+                                document.location.replace("./Edit.html");
+                            } else {
+                                swal("Your data will be remain unchanged !");
+                            }
+                        });
+
+            }
+
+
+            function passDeleteId(userId) {
+
+                swal({
+                    title: "Do you want to delete?",
+                    text: "Once deleted, you will not be able to recover this data!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                deleteUser(userId)
+                                swal("Poof! Your imaginary file has been deleted!", {
+                                    icon: "success",
+                                });
+                            } else {
+                                swal("Your data are safe");
+                            }
+                        });
+            }
+
+
+            async function deleteUser(userId) {
+
+                console.log("User id is" + userId)
+                const response = await fetch("http://localhost:8080/NicRestValidation1/resources/user/delete-User",
+                        {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                id: userId,
+                                nic: "",
+                                fullname: "",
+                                address: "",
+                                nationality: "",
+                            }),
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        })
+                location.reload();
+            }
+
+        </script>
+
+    </body>
+</html>

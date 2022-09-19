@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View  User</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <div class="container"  align="center">
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h4  align="left">User NIC Validation/List of Users</h4>
+                    <div  align="right">
+                        <a href="index.html"><button class="btn btn-primary">Add New User</button></a>
+                        &nbsp;
+                        <a href="View.html"><button class="btn btn-primary">List All Users</button></a>
+                    </div>
+
+                </div>
+                <div class="card-body"   align="center">
+
+
+                    <form action="" method="post" id="dataForm" >                        
+
+                        <div class="form-group row">
+                            <label for="fullName" class="col-sm-2 col-form-label">Full Name</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="fullName" id="fullName" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-7">
+
+                                <input type="text" class="form-control" name="address" id="address" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="nationality" class="col-sm-2 col-form-label">Nationality</label>
+                            <div class="col-sm-7">
+                                <select name="nationality" class="form-control" id="nationality" class="col-sm-7">
+                                    <option>Sinhala</option>
+                                    <option>Tamil</option>
+                                    <option>Muslim</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="nic" class="col-sm-2 col-form-label">NIC</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="nic"  id="nic" value="" >
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="gender" class="col-sm-2 col-form-label">Gender</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="gender" id="gender" value="" >
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="age" class="col-sm-2 col-form-label">Age</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="age" id="age" value="" >
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="dob" class="col-sm-2 col-form-label">Date of Birth</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="dob" id="dob" value="">
+                            </div>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary btn-lg">Update</button>
+
+                    </form >
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            var editId = localStorage.getItem("edit_id");
+            console.log("Edit id  is " + editId);
+            derivedData(editId);
+
+            function derivedData(editId) {
+                var derivedDataDB = fetch("http://localhost:8080/NicRestValidation1/resources/user/retrieve-user",
+                        {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                id: editId,
+                                fullName: "",
+                                address: "",
+                                nationality: "",
+                                nic: "",
+                                gender: "",
+                                age: 0,
+                                dob: ""
+                            }),
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        })
+                        .then(function (response) {
+                            return response.json()
+                        })
+
+                derivedDataDB.then(result => {
+                    var retrivedFullName = result.fullName;
+                    var retrivedAddress = result.address;
+                    var retrivedNationality = result.nationality;
+                    var retrivedNic = result.nic;
+                    var retrivedGender = result.gender;
+                    var retrivedAge = result.age;
+                    var retrivedDob = result.dob;
+
+                    console.log("Full name from databbase is: " + retrivedFullName);
+                    document.getElementById("fullName").value = retrivedFullName;
+                    document.getElementById("address").value = retrivedAddress;
+                    document.getElementById("nationality").value = retrivedNationality;
+                    document.getElementById("nic").value = retrivedNic;
+                    document.getElementById("gender").value = retrivedGender;
+                    document.getElementById("age").value = retrivedAge;
+                    document.getElementById("dob").value = retrivedDob;
+
+                })
+
+            }
+
+            var form = document.getElementById("dataForm");
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                console.log("Evennt Listennner working from edit");
+
+                var fullName = document.getElementById("fullName").value;
+                var address = document.getElementById("address").value;
+                var nationality = document.getElementById("nationality").value;
+                var nic = document.getElementById("nic").value;
+                var gender = document.getElementById("gender").value;
+                var age = document.getElementById("age").value;
+                var dob = document.getElementById("dob").value;
+
+                console.log(nic);
+                console.log(editId);
+
+                fetch("http://localhost:8080/NicRestValidation1/resources/user/edit-user",
+                        {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                id: editId,
+                                fullName: fullName,
+                                address: address,
+                                nationality: nationality,
+                                nic: nic,
+                                gender: gender,
+                                age: age,
+                                dob: dob
+                            }),
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        })
+                        .then(function (response) {
+                            document.location.replace("./View.html");
+                            return response.json()
+                        })
+                        
+//                        document.location.replace("./View.html");
+
+            })
+            
+
+        </script>
+
+    </body>
+</html>
+
+
